@@ -1,0 +1,24 @@
+# Supabase
+supabase/.branches
+supabase/.temp
+supabase/.env
+supabase/functions/.env
+supabase/signing_keys.json
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# Dependencies and tooling caches
+node_modules/
+deno.lock
+.deno/
+coverage/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.log
