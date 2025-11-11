@@ -1,8 +1,11 @@
 -- =============================================================================
 -- Local development seed (applied by `supabase db reset`; never in production)
 --
--- Demo users (password for all: Password123!):
---   alice@acme.test, bob@acme.test, carol@shared.test, dave@globex.test
+-- Demo users (password for all: Password123!)
+--   alice@acme.test    owner of Acme
+--   bob@acme.test      admin of Acme
+--   carol@shared.test  member of Acme AND member of Globex (multi-tenant user)
+--   dave@globex.test   owner of Globex
 -- =============================================================================
 
 -- -----------------------------------------------------------------------------
@@ -34,3 +37,17 @@ select gen_random_uuid(), u.id, u.id::text,
        'email', now(), now(), now()
 from auth.users u
 where u.email in ('alice@acme.test', 'bob@acme.test', 'carol@shared.test', 'dave@globex.test');
+
+-- -----------------------------------------------------------------------------
+-- Demo tenants
+-- -----------------------------------------------------------------------------
+insert into public.organizations (id, name, slug, created_by) values
+  ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa', 'Acme Corp',  'acme',   '11111111-1111-4111-8111-111111111111'),
+  ('bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb', 'Globex Inc', 'globex', '44444444-4444-4444-8444-444444444444');
+
+insert into public.organization_members (organization_id, user_id, role) values
+  ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa', '11111111-1111-4111-8111-111111111111', 'owner'),
+  ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa', '22222222-2222-4222-8222-222222222222', 'admin'),
+  ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa', '33333333-3333-4333-8333-333333333333', 'member'),
+  ('bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb', '44444444-4444-4444-8444-444444444444', 'owner'),
+  ('bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb', '33333333-3333-4333-8333-333333333333', 'member');
