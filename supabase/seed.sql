@@ -51,3 +51,14 @@ insert into public.organization_members (organization_id, user_id, role) values
   ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa', '33333333-3333-4333-8333-333333333333', 'member'),
   ('bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb', '44444444-4444-4444-8444-444444444444', 'owner'),
   ('bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb', '33333333-3333-4333-8333-333333333333', 'member');
+
+-- -----------------------------------------------------------------------------
+-- Demo projects
+-- -----------------------------------------------------------------------------
+insert into public.projects (id, organization_id, name, description, created_by) values
+  ('a1a1a1a1-a1a1-4a1a-8a1a-a1a1a1a1a1a1', 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa', 'Website Redesign', 'Acme marketing site', '11111111-1111-4111-8111-111111111111'),
+  ('b1b1b1b1-b1b1-4b1b-8b1b-b1b1b1b1b1b1', 'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb', 'Mobile App', 'Globex customer app', '44444444-4444-4444-8444-444444444444');
+
+-- Carol works on the Acme project (she is a plain member of Acme).
+insert into public.project_members (project_id, user_id, role) values
+  ('a1a1a1a1-a1a1-4a1a-8a1a-a1a1a1a1a1a1', '33333333-3333-4333-8333-333333333333', 'contributor');
