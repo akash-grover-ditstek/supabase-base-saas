@@ -1,0 +1,16 @@
+{
+  "tasks": {
+    "test:functions": "deno test --allow-env --allow-net --allow-read --no-lock supabase/tests/functions",
+    "lint": "deno lint supabase/functions supabase/tests"
+  },
+  "lint": {
+    "rules": {
+      "exclude": [
+        "no-import-prefix"
+      ]
+    }
+  },
+  "fmt": {
+    "lineWidth": 120
+  }
+}
