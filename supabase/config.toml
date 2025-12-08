@@ -430,3 +430,18 @@ enabled = true
 enabled = true
 verify_jwt = false
 entrypoint = "./functions/create-checkout-session/index.js"
+
+[functions.create-billing-portal-session]
+enabled = true
+verify_jwt = false
+entrypoint = "./functions/create-billing-portal-session/index.js"
+
+[functions.manage-subscription]
+enabled = true
+verify_jwt = false
+entrypoint = "./functions/manage-subscription/index.js"
+
+[functions.invite-organization-member]
+enabled = true
+verify_jwt = false
+entrypoint = "./functions/invite-organization-member/index.js"
