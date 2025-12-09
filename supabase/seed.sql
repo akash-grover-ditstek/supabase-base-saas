@@ -6,6 +6,9 @@
 --   bob@acme.test      admin of Acme
 --   carol@shared.test  member of Acme AND member of Globex (multi-tenant user)
 --   dave@globex.test   owner of Globex
+--
+-- Stripe prices are placeholders. For Stripe test mode, replace them with the
+-- Price IDs from your Stripe dashboard (see docs/stripe-billing.md).
 -- =============================================================================
 
 -- -----------------------------------------------------------------------------
@@ -62,3 +65,16 @@ insert into public.projects (id, organization_id, name, description, created_by)
 -- Carol works on the Acme project (she is a plain member of Acme).
 insert into public.project_members (project_id, user_id, role) values
   ('a1a1a1a1-a1a1-4a1a-8a1a-a1a1a1a1a1a1', '33333333-3333-4333-8333-333333333333', 'contributor');
+
+-- -----------------------------------------------------------------------------
+-- Stripe price catalog (local placeholders)
+-- -----------------------------------------------------------------------------
+insert into public.subscription_plan_prices (plan_id, stripe_price_id, billing_interval, currency, unit_amount)
+select p.id, v.stripe_price_id, v.billing_interval::public.billing_interval, 'usd', v.unit_amount
+from (values
+  ('pro',      'price_local_pro_monthly',      'month',  2900),
+  ('pro',      'price_local_pro_yearly',       'year',  29000),
+  ('business', 'price_local_business_monthly', 'month',  9900),
+  ('business', 'price_local_business_yearly',  'year',  99000)
+) as v(plan_code, stripe_price_id, billing_interval, unit_amount)
+join public.subscription_plans p on p.code = v.plan_code;

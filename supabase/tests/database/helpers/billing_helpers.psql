@@ -1,0 +1,55 @@
+-- =============================================================================
+-- Billing fixtures for pgTAP (included after test_helpers.psql).
+-- Test prices replace the environment's catalog prices for the transaction.
+-- =============================================================================
+
+create function tests.use_test_prices()
+returns void
+language sql
+security definer
+set search_path = ''
+as $$
+  update public.subscription_plan_prices set is_active = false where is_active;
+
+  insert into public.subscription_plan_prices (plan_id, stripe_price_id, billing_interval, currency, unit_amount)
+  select p.id, v.price_id, v.billing_interval::public.billing_interval, 'usd', v.amount
+  from (values
+    ('pro',      'price_test_pro_monthly',      'month', 2900),
+    ('pro',      'price_test_pro_yearly',       'year',  29000),
+    ('business', 'price_test_business_monthly', 'month', 9900)
+  ) as v(plan_code, price_id, billing_interval, amount)
+  join public.subscription_plans p on p.code = v.plan_code;
+$$;
+
+create function tests.link_customer(p_org text, p_customer_id text)
+returns void
+language sql
+security definer
+set search_path = ''
+as $$
+  insert into public.stripe_customers (organization_id, stripe_customer_id)
+  values (tests.id(p_org), p_customer_id)
+$$;
+
+-- A normalized subscription as produced by the Edge Functions.
+create function tests.subscription(
+  p_id        text,
+  p_customer  text,
+  p_status    text,
+  p_price     text default 'price_test_pro_monthly',
+  p_extra     jsonb default '{}'::jsonb
+)
+returns jsonb
+language sql
+stable
+as $$
+  select jsonb_build_object(
+    'id', p_id,
+    'customer', p_customer,
+    'status', p_status,
+    'price_id', p_price,
+    'cancel_at_period_end', false,
+    'current_period_start', now() - interval '1 day',
+    'current_period_end', now() + interval '29 days'
+  ) || p_extra
+$$;
