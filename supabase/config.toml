@@ -445,3 +445,13 @@ entrypoint = "./functions/manage-subscription/index.js"
 enabled = true
 verify_jwt = false
 entrypoint = "./functions/invite-organization-member/index.js"
+
+[functions.stripe-webhook]
+enabled = true
+verify_jwt = false
+entrypoint = "./functions/stripe-webhook/index.js"
+
+[functions.sync-subscription]
+enabled = true
+verify_jwt = false
+entrypoint = "./functions/sync-subscription/index.js"
