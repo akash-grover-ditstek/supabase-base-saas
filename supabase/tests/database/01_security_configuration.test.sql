@@ -7,7 +7,7 @@
 begin;
 \ir helpers/test_helpers.psql
 
-select plan(8);
+select plan(9);
 
 select is(
   (select array_agg(c.relname::text order by c.relname)
@@ -51,6 +51,15 @@ select is(
       and not exists (select 1 from unnest(coalesce(p.proconfig, '{}')) cfg where cfg like 'search_path=%')),
   null,
   'every SECURITY DEFINER function pins its search_path'
+);
+
+select is(
+  (select array_agg(p.oid::regprocedure::text order by p.oid::regprocedure::text)
+     from pg_proc p join pg_namespace n on n.oid = p.pronamespace
+    where n.nspname in ('public', 'private')
+      and has_function_privilege('anon', p.oid, 'EXECUTE')),
+  null,
+  'no function in public/private is executable by anon (or PUBLIC)'
 );
 
 select is(

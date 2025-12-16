@@ -201,3 +201,4 @@ end;
 $$;
 
 grant select on tests.fixtures to anon, authenticated, service_role;
+grant execute on all functions in schema tests to anon, authenticated, service_role;

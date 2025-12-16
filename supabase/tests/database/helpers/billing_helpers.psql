@@ -53,3 +53,5 @@ as $$
     'current_period_end', now() + interval '29 days'
   ) || p_extra
 $$;
+
+grant execute on all functions in schema tests to anon, authenticated, service_role;
