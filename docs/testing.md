@@ -23,6 +23,17 @@ STRIPE_SECRET_KEY=sk_test_... STRIPE_TEST_PRICE_ID=price_... scripts/test.sh str
 
 `scripts/test.sh` uses `supabase`/`deno` from `PATH`, or falls back to `npx supabase` / `npx deno`.
 
+With Docker only (no CLI or Deno on the host), the same suites run against the Compose stack:
+
+```bash
+docker compose up -d --build
+docker compose --profile test run --rm test-db          # pgTAP (pg_prove)
+docker compose --profile test run --rm test-functions   # mocked + integration (Deno)
+```
+
+`test-db` enables pgTAP for the run and removes it afterwards. `test-functions` points the
+integration tests at the gateway (`http://gateway:8000`) and the `db` service.
+
 ## Database tests (pgTAP)
 
 Each file runs in a transaction that is rolled back. It includes `helpers/test_helpers.psql` with
