@@ -1,0 +1,10 @@
+# Keep secrets, VCS data and local tool state out of the build context.
+.git
+**/.env
+**/.env.*
+!.env.example
+supabase/.temp
+supabase/.branches
+node_modules
+coverage
+*.log
